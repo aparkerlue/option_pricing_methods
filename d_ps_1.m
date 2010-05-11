@@ -12,15 +12,17 @@ X = 35; t = 1/12;
 binom(S, X, r, t, t/n, sd)
 
 %%
-S = 50;
-X = 50;
-r = 0.10;
-sd = 0.40;
-T = 5/12;
+S = 40;
+X = 35;
+r = 0.05;
+sd = 0.30;
+T = 1/12;
 q = 0;
-m = 20;
-n = 10;
-%dS = 5;
-fCP = 0;
-fAE = 0;
-fdi1(S, X, r, sd, T, q, m, n, fCP, fAE)
+n = 300;
+fCP = 1;
+fAE = 1;
+for X = [35 40 45]
+    for T = [1/12 4/12 7/12]
+        binom(S, X, r, sd, T, n, fCP, fAE)
+    end
+end
