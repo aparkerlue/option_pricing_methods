@@ -26,7 +26,11 @@ for i = n-1:-1:0
             B(j) = f(j,i+1) - a*f_S0;
         elseif (j == m-1)       % f(j+1) == 0.
             A(j,j-1:j) = [a b];
-            B(j) = f(j,i+1) - c*0;
+            if (i == 0)         % FIXME: Hack; all f(m,:) are identical.
+                B(j) = f(j,i+1) - c*f(j+1,i+1);
+            else
+                B(j) = f(j,i+1) - c*f(j+1,i);
+            end
         else
             A(j,j-1:j+1) = [a b c];
             B(j) = f(j,i+1);
