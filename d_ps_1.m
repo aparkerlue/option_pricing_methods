@@ -20,7 +20,7 @@ T = 5/12;
 q = 0;
 m = 20;
 n = 10;
-dS = 5;
+%dS = 5;
 fCP = 0;
-fAE = 1;
-fdi1(S, X, r, sd, T, q, m, n, dS, fCP, fAE)
+fAE = 0;
+fdi1(S, X, r, sd, T, q, m, n, fCP, fAE)

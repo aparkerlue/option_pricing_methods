@@ -1,5 +1,7 @@
-%% S may be a vector.  Everything else must be a scalar.
-function [ OptionValue ] = fdi1(S, X, r, sd, T, q, m, n, dS, fCallPut, fAmEur)
+%% All parameters are scalars.
+function [ OptionValue ] = fdi1(S, X, r, sd, T, q, m, n, fCallPut, fAmEur)
+m = m + mod(m, 2);              % Ensure that m is even.
+dS = 2*S/m;
 dt = T/n;
 f = zeros(m, n);                % Doesn't include S = 0 or t = 0.
 if (fCallPut == 1)              % Option is a call.
@@ -44,4 +46,4 @@ for i = n-1:-1:0
         f_t0 = f_i;
     end
 end
-OptionValue = f_t0;
+OptionValue = f_t0(m/2);
