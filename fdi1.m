@@ -1,11 +1,15 @@
-%% All parameters are scalars.
-function [ OptionValue ] = fdi1(S, X, r, T, sd, q, m, n, fCallPut, fAmEur)
-if ~exists(fCallPut)
+function [ OptionValue ] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, m, n)
+%FDI1 Implicit finite difference method for option pricing.
+%   [OPTIONVALUE] = FDI1() prices an option using an implicit
+%   finite different method.
+
+if nargin < 7
     fCallPut = 1
 end
-if ~exists(fAmEur)
+if nargin < 8
     fAmEur = 1
 end
+
 m = m + mod(m, 2);              % Ensure that m is even.
 dS = 2*S/m;
 dt = T/n;
