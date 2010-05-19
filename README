@@ -1,0 +1,12 @@
+Option Pricing Methods README
+=============================
+
+2010-05-19
+
+Option pricing methods.
+
+	* binomial
+
+	* finite difference
+
+Written in MATLAB.
