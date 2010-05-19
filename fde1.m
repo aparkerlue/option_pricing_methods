@@ -1,7 +1,7 @@
-function [ OptionValue ] = fde1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
-%FDE1 Explicit finite difference method for option pricing.
-%   [OPTIONVALUE] = FDE1() prices an option using an explicit finite
-%   different method.
+function [opt] = fde1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+%FDE1 Explicit finite difference option pricing method.
+%   [OPT] = FDE1() prices an option using an explicit finite
+%   difference method.
 
 if nargin < 7
     fCallPut = 1;
@@ -55,4 +55,5 @@ for i = n-1:-1:0
         f_t0 = f_i;
     end
 end
-OptionValue = f_t0(m/2);
+
+opt = f_t0(m/2);

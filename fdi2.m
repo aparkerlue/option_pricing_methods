@@ -1,63 +1,57 @@
-%% All parameters are scalars.
-function [ OptionValue ] = fdi2(S, X, r, sd, T, q, m, n, fCallPut, fAmEur, N1)
-%LN_ZERO = -1e2;                 % Constant to approximate the log of 0.
-ZERO = 1e-320;                  % Constant to approximate 0.
-m = m + mod(m,2);               % Ensure that m is even.
-Z = log(S);
-Z_max = log(2*S)
-dZ = Z_max/(m-N1)
-Z_min = Z_max - m*dZ
-iZ = m*(Z + N1*dZ)/(Z + N1*dZ + log(2))
-%dZ = Z/(m/2 - N1);              % Z - m/2*dZ = -N1*dZ
-%Z_min = Z - m/2*dZ
-%Z_max = Z + m/2*dZ
-dt = T/n;
-f = zeros(m, n);                % Doesn't include Z = LN_ZERO or t = 0.
-if (fCallPut == 1)              % Option is a call.
-    f(:,n) = log(bsxfun(@max, exp(Z_min+dZ:dZ:Z_max)' - X, ZERO));
-    f(m,:) = log(exp(Z_max) - X); % At Z == Z_max.
-    f_Z0 = log(ZERO);           % At S == 0, f_Z0 is approx 0.
-else                            % Option is a put.
-    f(:,n) = log(bsxfun(@max, X - exp(Z_min+dZ:dZ:Z_max)', ZERO));
-    f(m,:) = log(ZERO);         % At Z == Z_max, f(m,:) is approx 0.
-    f_Z0 = log(X);              % At Z == 0.
+function [opt] = fdi2(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+%FDI2 Log transform implicit finite difference option pricing method.
+%   [OPT] = FDI2() prices an option using an implicit finite different
+%   method with a log-transformed spatial variable.
+
+if nargin < 7
+    fCallPut = 1;
 end
-f_t0 = log(ZERO*ones([m-1 1]));
-a = dt/(2*dZ)*(r-q-sd^2/2) - dt/(2*dZ^2)*sd^2;
+if nargin < 8
+    fAmEur = 1;
+end
+if nargin < 9
+    n = ceil(1e3*T);
+end
+if nargin < 10
+    m = 2*ceil(sqrt(3*n));
+end
+
+dt = T / n;
+m = m + mod(m,2);                       % Ensure that m is even.
+Z_lim = log(S) + 3*sd*sqrt(T)*[-1 1];
+dZ = diff(Z_lim) / m;
+Z_seq = Z_lim(1) + (0:m)*dZ;            % vector of m + 1 elements
+
+f = zeros([n+1 m+1]);
+switch fCallPut
+  case 1                                % call
+    f(g2m(n),:) = max(exp(Z_seq) - X, 0);
+    f(:,g2m(m)) = exp(Z_seq(g2m(m))) - X;
+    f(:,g2m(0)) = 0;
+  case 0                                % put
+    f(g2m(n),:) = max(X - exp(Z_seq), 0);
+    f(:,g2m(m)) = 0;
+    f(:,g2m(0)) = X - exp(Z_seq(g2m(0)));
+  otherwise
+    error('Unrecognized option type flag: %d.', fCallPut);
+end
+
+a = dt/(2*dZ)*(r - 1/2*sd^2) - dt/(2*dZ^2)*sd^2;
 b = 1 + dt/dZ^2*sd^2 + r*dt;
-c = -dt/(2*dZ)*(r-q-sd^2/2) - dt/(2*dZ^2)*sd^2;
-for i = n-1:-1:0
-    A = zeros([m-1 m-1]);
-    B = zeros([m-1 1]);
+c = -dt/(2*dZ)*(r - 1/2*sd^2) - dt/(2*dZ^2)*sd^2;
+for i = g2m(n-1:-1:0)                   % Iterate from end to beginning.
+    A = zeros(m-1);
+    B = f(i+1,g2m(1:m-1))';
     for j = 1:m-1
-        if (j == 1)             % Z = Z_min at f(j-1).
-            A(j,j:j+1) = [b c];
-            B(j) = f(j,i+1) - a*f_Z0;
-        elseif (j == m-1)       % Z = Z_max at f(j+1).
-            A(j,j-1:j) = [a b];
-            if (i == 0)         % FIXME: Hack; all f(m,:) are identical.
-                B(j) = f(j,i+1) - c*f(j+1,i+1);
-            else
-                B(j) = f(j,i+1) - c*f(j+1,i);
-            end
-        else
-            A(j,j-1:j+1) = [a b c];
-            B(j) = f(j,i+1);
+        if j <= 1, A(j,1:2) = [b c]; B(1) = B(1) - a*f(i,g2m(0));
+        elseif j < m-1, A(j,j-1:j+1) = [a b c];
+        else A(j,m-2:m-1) = [a b]; B(m-1) = B(m-1) - c*f(i,g2m(m));
         end
     end
-    f_i = linsolve(A,B);
-    if (fAmEur == 1)            % Option is American.
-        if (fCallPut == 1)      % Option is a call.
-            f_i = bsxfun(@max, f_i, log(exp(Z_min+dZ:dZ:Z_max-dZ)' - X));
-        else                    % Option is a put.
-            f_i = bsxfun(@max, f_i, log(X - exp(Z_min+dZ:dZ:Z_max-dZ)'));
-        end
-    end
-    if (i > 0)
-        f(1:m-1,i) = f_i;
-    else
-        f_t0 = f_i;
+    f(i,g2m(1:m-1)) = linsolve(A,B);
+    if fCallPut == 0 && fAmEur == 1
+        f(i,:) = max(f(i,:), X - exp(Z_seq));
     end
 end
-OptionValue = exp(f_t0(m/2));
-OptionValue = exp(f_t0);
+
+opt = f(g2m(0),g2m(m/2));

@@ -1,7 +1,7 @@
-function [ OptionValue ] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
-%FDI1 Implicit finite difference method for option pricing.
-%   [OPTIONVALUE] = FDI1() prices an option using an implicit finite
-%   different method.
+function [opt] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+%FDI1 Implicit finite difference option pricing method.
+%   [OPT] = FDI1() prices an option using an implicit finite
+%   difference method.
 
 if nargin < 7
     fCallPut = 1;
@@ -66,4 +66,5 @@ for i = n-1:-1:0
         f_t0 = f_i;
     end
 end
-OptionValue = f_t0(m/2);
+
+opt = f_t0(m/2);
