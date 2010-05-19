@@ -1,13 +1,17 @@
-%% Scratchwork.
+%% Scratchwork.  Parameters yield option price of $4.28.
 S = 50;
 X = 50;
 r = 0.10;                               % Annual.
 T = 5 / 12;                             % Months.
 sd = 0.40;                              % Annual.
-n = 1000;
+q = 0;
 fCP = 0;                                % fCP == 0 => put
 fAE = 1;                                % fAE == 1 => american
-binom(S, X, r, T, sd, n, fCP, fAE)
+
+n = 1000;
+binom(S, X, r, T, sd, fCP, fAE, n)
+
+%fdi1(S, X, r, T, sd, q, fCP, fAE, m, n)
 
 %% Following code not vetted.
 
