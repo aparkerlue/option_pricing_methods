@@ -8,58 +8,29 @@ q = 0;
 fCallPut = 0;                           % fCallPut == 0 => put
 fAmEur = 1;                             % fAmEur == 1 => american
 
-%n = 1000;
-%binom(S, X, r, T, sd, fCallPut, fAmEur, n)
-
 fdi1(S, X, r, T, sd, q, fCallPut, fAmEur)
 fdi2(S, X, r, T, sd, q, fCallPut, fAmEur)
 fde1(S, X, r, T, sd, q, fCallPut, fAmEur)
 fde2(S, X, r, T, sd, q, fCallPut, fAmEur)
 
+%% Table 1.
+S = 40;
+X = [35 40 45];
+r = 0.05;
+T = [1 4 7] / 12;
+sd = 0.30;
+q = 0;
+fCallPut = 1;                           % fCallPut == 1 => call
+fAmEur = 1;                             % fAmEur == 1 => american
 
-%% FDI2 development.
-n = ceil(1e3*T);
-m = 2*ceil(sqrt(3*n));
-
-dt = T / n;
-m = m + mod(m,2);                       % Ensure that m is even.
-Z_lim = log(S) + 3*sd*sqrt(T)*[-1 1];
-dZ = diff(Z_lim) / m;
-Z_seq = Z_lim(1) + (0:m)*dZ;            % vector of m + 1 elements
-
-f = zeros([n+1 m+1]);
-switch fCallPut
-  case 1                                % call
-    f(g2m(n),:) = max(exp(Z_seq) - X, 0);
-    f(:,g2m(m)) = exp(Z_seq(g2m(m))) - X;
-    f(:,g2m(0)) = 0;
-  case 0                                % put
-    f(g2m(n),:) = max(X - exp(Z_seq), 0);
-    f(:,g2m(m)) = 0;
-    f(:,g2m(0)) = X - exp(Z_seq(g2m(0)));
-  otherwise
-    error('Unrecognized option type flag: %d.', fCallPut);
-end
-
-a = dt/(2*dZ)*(r - 1/2*sd^2) - dt/(2*dZ^2)*sd^2;
-b = 1 + dt/dZ^2*sd^2 + r*dt;
-c = -dt/(2*dZ)*(r - 1/2*sd^2) - dt/(2*dZ^2)*sd^2;
-for i = g2m(n-1:-1:0)                   % Iterate from end to beginning.
-    A = zeros(m-1);
-    B = f(i+1,g2m(1:m-1))';
-    for j = 1:m-1
-        if j <= 1, A(j,1:2) = [b c]; B(1) = B(1) - a*f(i,g2m(0));
-        elseif j < m-1, A(j,j-1:j+1) = [a b c];
-        else A(j,m-2:m-1) = [a b]; B(m-1) = B(m-1) - c*f(i,g2m(m));
-        end
-    end
-    f(i,g2m(1:m-1)) = linsolve(A,B);
-    if fCallPut == 0 && fAmEur == 1
-        f(i,:) = max(f(i,:), X - exp(Z_seq));
-    end
-end
-
-opt = f(g2m(0),g2m(m/2));
+i = 1; j = 1;
+n = struct('bin', 300, 'fde1', 315*12*T(j), 'fd', 45*12*T(j));
+m = struct('fde1', 200, 'fd', 200);
+binom(S, X(i), r, T(j), sd, q, fCallPut, fAmEur, n.bin)
+fde1(S, X(i), r, T(j), sd, q, fCallPut, fAmEur, n.fde1, m.fde1)
+fde2(S, X(i), r, T(j), sd, q, fCallPut, fAmEur, n.fd, m.fd)
+fdi1(S, X(i), r, T(j), sd, q, fCallPut, fAmEur, n.fd, m.fd)
+fdi2(S, X(i), r, T(j), sd, q, fCallPut, fAmEur, n.fd, m.fd)
 
 
 %% Following code not vetted.

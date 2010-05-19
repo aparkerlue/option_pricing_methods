@@ -1,7 +1,6 @@
-function [ OptionValue ] = binom(S, X, r, T, sd, fCallPut, fAmEur, n)
+function [opt] = binom(S, X, r, T, sd, q, fCallPut, fAmEur, n)
 %BINOM Binomial put and call pricing.
-%   [OPTIONVALUE] = FDI1() prices an option using a binomial
-%   pricing model.
+%   [OPT] = BINOM() prices an option using a binomial pricing model.
 
 dt = T/n;
 u = exp(sd*sqrt(dt));
@@ -31,4 +30,4 @@ for i = n-1:-1:0
         v = cv;
     end
 end
-OptionValue = v;
+opt = v;

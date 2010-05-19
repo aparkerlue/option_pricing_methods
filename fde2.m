@@ -18,7 +18,7 @@ end
 
 dt = T / n;
 m = m + mod(m,2);                       % Ensure that m is even.
-Z_lim = log(S) + 3*sd*sqrt(T)*[-1 1];
+Z_lim=log(S)+m*sd*sqrt(3*dt/2)*[-1 1];  % Ensure that dZ >= sd*sqrt(3*dt).
 dZ = diff(Z_lim) / m;
 Z_seq = Z_lim(1) + (0:m)*dZ;            % vector of m + 1 elements
 
