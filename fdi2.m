@@ -1,7 +1,7 @@
 function [opt] = fdi2(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
 %FDI2 Log transform implicit finite difference option pricing method.
-%   [OPT] = FDI2() prices an option using an implicit finite different
-%   method with a log-transformed spatial variable.
+%   [OPT] = FDI2() prices an option using an implicit finite
+%   difference method with a log-transformed spatial variable.
 
 if nargin < 7
     fCallPut = 1;

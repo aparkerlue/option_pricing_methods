@@ -14,6 +14,8 @@ fAmEur = 1;                             % fAmEur == 1 => american
 fdi1(S, X, r, T, sd, q, fCallPut, fAmEur)
 fdi2(S, X, r, T, sd, q, fCallPut, fAmEur)
 fde1(S, X, r, T, sd, q, fCallPut, fAmEur)
+fde2(S, X, r, T, sd, q, fCallPut, fAmEur)
+
 
 %% FDI2 development.
 n = ceil(1e3*T);
