@@ -1,5 +1,11 @@
 %% All parameters are scalars.
-function [ OptionValue ] = fdi1(S, X, r, sd, T, q, m, n, fCallPut, fAmEur)
+function [ OptionValue ] = fdi1(S, X, r, T, sd, q, m, n, fCallPut, fAmEur)
+if ~exists(fCallPut)
+    fCallPut = 1
+end
+if ~exists(fAmEur)
+    fAmEur = 1
+end
 m = m + mod(m, 2);              % Ensure that m is even.
 dS = 2*S/m;
 dt = T/n;
