@@ -8,10 +8,12 @@ q = 0;
 fCP = 0;                                % fCP == 0 => put
 fAE = 1;                                % fAE == 1 => american
 
-n = 1000;
-binom(S, X, r, T, sd, fCP, fAE, n)
+%n = 1000;
+%binom(S, X, r, T, sd, fCP, fAE, n)
 
-%fdi1(S, X, r, T, sd, q, fCP, fAE, m, n)
+%fdi1(S, X, r, T, sd, q, fCP, fAE)
+fde1(S, X, r, T, sd, q, fCP, fAE)
+
 
 %% Following code not vetted.
 

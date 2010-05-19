@@ -1,13 +1,19 @@
-function [ OptionValue ] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, m, n)
+function [ OptionValue ] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
 %FDI1 Implicit finite difference method for option pricing.
-%   [OPTIONVALUE] = BINOM() prices an option using an implicit
-%   finite different method.
+%   [OPTIONVALUE] = FDI1() prices an option using an implicit finite
+%   different method.
 
 if nargin < 7
     fCallPut = 1;
 end
 if nargin < 8
     fAmEur = 1;
+end
+if nargin < 9
+    n = ceil(1e3*T);
+end
+if nargin < 10
+    m = 2*ceil(sqrt(3*n));
 end
 
 m = m + mod(m, 2);              % Ensure that m is even.

@@ -1,5 +1,21 @@
-%% All parameters are scalars.
-function [ OptionValue ] = fde1(S, X, r, sd, T, q, m, n, fCallPut, fAmEur)
+function [ OptionValue ] = fde1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+%FDE1 Explicit finite difference method for option pricing.
+%   [OPTIONVALUE] = FDE1() prices an option using an explicit finite
+%   different method.
+
+if nargin < 7
+    fCallPut = 1;
+end
+if nargin < 8
+    fAmEur = 1;
+end
+if nargin < 9
+    n = ceil(1e3*T);
+end
+if nargin < 10
+    m = 2*ceil(sqrt(3*n));
+end
+
 m = m + mod(m, 2);              % Ensure that m is even.
 dS = 2*S/m;
 dt = T/n;
