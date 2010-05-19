@@ -1,9 +1,16 @@
-%% MGMT 237d, Homework 1.
-S = 40;
-X = [ 35 40 45 ]';
-r = 0.05;			% Annual.
-sd = 0.3;			% Annual.
-t = [ 1 4 7 ]';			% Months.
+%% Scratchwork.
+S = 50;
+X = 50;
+r = 0.10;                               % Annual.
+T = 5 / 12;                             % Months.
+sd = 0.40;                              % Annual.
+n = 1000;
+fCP = 0;                                % fCP == 0 => put
+fAE = 1;                                % fAE == 1 => american
+binom(S, X, r, T, sd, n, fCP, fAE)
+
+%% Following code not vetted.
+
 D = [ 0.50 1.00 2.00 3.00 4.00 ];
 
 %% Table 1.

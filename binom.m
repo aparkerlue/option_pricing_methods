@@ -1,4 +1,4 @@
-function [ OptionValue ] = binom(S, X, r, sd, T, n, fCP, fAE)
+function [ OptionValue ] = binom(S, X, r, T, sd, n, fCP, fAE)
 dt = T/n;
 u = exp(sd*sqrt(dt));
 d = 1/u;
