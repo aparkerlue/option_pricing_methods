@@ -15,16 +15,17 @@ fde2(S, X, r, T, sd, fCallPut, fAmEur, q)
 
 %% Scratchwork.
 S = 40;
-X = 35;
+X = 45;
 r = 0.05;                               % Annual.
-T = 1 / 12;                             % Months / 12.
+T = 7 / 12;                             % Months / 12.
 sd = 0.30;                              % Annual.
 q = 0.05;                               % Annual.
+D = 0.50;                               % Quarterly.
 fCallPut = 1;                           % fCallPut == 1 => call
 fAmEur = 1;                             % fAmEur == 1 => american
 
 n = struct('bin1', 140);
-binom(S, X, r, T, sd, fCallPut, fAmEur, n.bin1, q)
+binom(S, X, r, T, sd, fCallPut, fAmEur, n.bin1, 0, D)
 
 %% Table 1.
 S = 40;
