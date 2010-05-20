@@ -1,4 +1,4 @@
-function [opt] = fde1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+function [opt] = fde1(S, X, r, T, sd, fCallPut, fAmEur, n, m)
 %FDE1 Explicit finite difference option pricing method.
 %   [OPT] = FDE1() prices an option using an explicit finite
 %   difference method.
@@ -33,9 +33,9 @@ f_t0 = zeros([m-1 1]);
 for i = n-1:-1:0
     f_i = zeros([m-1 1]);
     for j = 1:m-1
-        a = 1/(1+r*dt) * (-0.5*(r-q)*j*dt + 0.5*sd^2*j^2*dt);
+        a = 1/(1+r*dt) * (-0.5*r*j*dt + 0.5*sd^2*j^2*dt);
         b = 1/(1+r*dt) * (1 - sd^2*j^2*dt);
-        c = 1/(1+r*dt) * (0.5*(r-q)*j*dt + 0.5*sd^2*j^2*dt);
+        c = 1/(1+r*dt) * (0.5*r*j*dt + 0.5*sd^2*j^2*dt);
         if (j == 1)
             f_i(j) = a*f_S0 + b*f(j+1,i+1) + c*f(j+1,i+1);
         else

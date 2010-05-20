@@ -1,4 +1,4 @@
-function [opt] = fde2(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+function [opt] = fde2(S, X, r, T, sd, fCallPut, fAmEur, n, m)
 %FDE2 Log transform explicit finite difference option pricing method.
 %   [OPT] = FDE2() prices an option using an explicit finite
 %   difference method with a log-transformed spatial variable.

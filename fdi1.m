@@ -1,4 +1,4 @@
-function [opt] = fdi1(S, X, r, T, sd, q, fCallPut, fAmEur, n, m)
+function [opt] = fdi1(S, X, r, T, sd, fCallPut, fAmEur, n, m)
 %FDI1 Implicit finite difference option pricing method.
 %   [OPT] = FDI1() prices an option using an implicit finite
 %   difference method.
@@ -34,9 +34,9 @@ for i = n-1:-1:0
     A = zeros([m-1 m-1]);
     B = zeros([m-1 1]);
     for j = 1:m-1
-        a = 0.5*(r - q)*j*dt - 0.5*sd^2*j^2*dt;
+        a = 0.5*r*j*dt - 0.5*sd^2*j^2*dt;
         b = 1 + sd^2*j^2*dt + r*dt;
-        c = -0.5*(r - q)*j*dt - 0.5*sd^2*j^2*dt;
+        c = -0.5*r*j*dt - 0.5*sd^2*j^2*dt;
         if (j == 1)             % f(j-1) == X.
             A(j,j:j+1) = [b c];
             B(j) = f(j,i+1) - a*f_S0;
